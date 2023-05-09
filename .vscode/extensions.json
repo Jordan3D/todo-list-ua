@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "visualstudioexptteam.vscodeintellicode",
+    "esbenp.prettier-vscode",
+    "christian-kohler.path-intellisense",
+    "christian-kohler.npm-intellisense",
+    "eg2.vscode-npm-script",
+    "silvenon.mdx",
+    "davidanson.vscode-markdownlint",
+    "ecmel.vscode-html-css",
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+    "mikestead.dotenv",
+    "streetsidesoftware.code-spell-checker",
+    "aaron-bond.better-comments",
+    "mgmcdermott.vscode-language-babel"
+  ]
+}
