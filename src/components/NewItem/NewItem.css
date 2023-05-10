@@ -1,0 +1,15 @@
+.NewItem {
+	display: flex;
+	height: 3.75rem;
+}
+.NewItem .NewItem__form {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+}
+.NewItem .NewItem__form input {
+	padding: 0 0.75rem;
+}
+.NewItem .NewItem__side {
+	display: flex;
+}

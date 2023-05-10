@@ -1,6 +1,7 @@
 .ListItem.MuiButtonBase-root {
 	background-color: white;
 	border: 1px dotted transparent;
+	height: 3.125rem;
 }
 .ListItem.MuiButtonBase-root.isDragging {
 	opacity: 0.5;
