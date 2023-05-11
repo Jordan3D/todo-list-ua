@@ -2,6 +2,15 @@
 	background-color: white;
 	border: 1px dotted transparent;
 	height: 3.125rem;
+	display: flex;
+	justify-content: space-between;
+}
+.ListItem .ListItem__actions {
+	display: flex;
+}
+.ListItemPopover__actions {
+	display: flex;
+	justify-content: flex-end;
 }
 .ListItem.MuiButtonBase-root.isDragging {
 	opacity: 0.5;

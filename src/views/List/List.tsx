@@ -1,15 +1,16 @@
-import { ReactElement, useEffect, useState, useCallback } from 'react';
+import { ReactElement, useEffect, useState, useCallback, ChangeEvent } from 'react';
 import update from 'immutability-helper';
-import { List as ListComponent, OutlinedInput, Button } from '@mui/material';
-import { useParams, useNavigate } from 'react-router-dom';
-import { IList, IListItem } from '../../types';
+import { List as ListComponent, OutlinedInput, Button, Typography } from '@mui/material';
+import { useParams, useNavigate, useBeforeUnload } from 'react-router-dom';
+import { IGetList, IList, IListItem } from '../../types';
 import ListItem from '../../components/ListItem/ListItem';
 import NewItem from '../../components/NewItem/NewItem';
 import './List.css';
 
 const List = (): ReactElement => {
 	const { listId } = useParams();
-	const [listData, setListData] = useState<IList | null>(null);
+	const [, setState] = useState<IGetList | null>(null);
+	const [listData, setListData] = useState<{ title?: string; id?: number } | null>(null);
 	const [listItems, setListItems] = useState<IListItem[]>([]);
 
 	const navigate = useNavigate();
@@ -18,19 +19,27 @@ const List = (): ReactElement => {
 		setListItems((items) => [...items, { id: items.length, text }]);
 	};
 
+	const onTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+		setListData((data) => ({ ...data, title: e.target.value }));
+	};
+
 	useEffect(() => {
 		if (listId) {
-			setListItems([]);
-			// getListItems
+			if (listId !== 'new') {
+				// TODO Make request to get 1 todo
+				//
+				setState(null);
+				setListData(null);
+				setListItems([]);
+			}
 		}
 	}, [listId]);
 
-	useEffect(() => {
-		if (listData) {
-			setListData(null);
-			// getListData
-		}
-	}, [listData]);
+	useBeforeUnload((e) => {
+		// Cancel the event
+		e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+		// Chrome requires returnValue to be set
+	});
 
 	const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
 		setListItems((prevItems: IListItem[]) =>
@@ -44,14 +53,41 @@ const List = (): ReactElement => {
 	}, []);
 
 	const BackHandler = () => {
+		// Check if everything is saved
 		navigate('/menu');
 	};
 
+	const onEditItem = (item: IListItem, index: number) => {
+		// TODO Make request to edit todo
+		//
+		console.log('Remove Item');
+	};
+
+	const onRemoveItem = (id: number) => {
+		// TODO Make request to remove 1 todo by id
+		//
+		console.log('Remove Item');
+	};
+
+	const isSubmitDisabled = !(listData?.title && listItems.length);
+
 	return (
 		<div className="ListContainer">
-			<Button onClick={BackHandler}>Back</Button>
+			<div className="ListContainer__header">
+				<Button onClick={BackHandler}>
+					<Typography>Back</Typography>
+				</Button>
+				<Button variant="outlined" onClick={BackHandler} disabled={isSubmitDisabled}>
+					<Typography>Submit</Typography>
+				</Button>
+			</div>
 			<div className="ListContainer__content">
-				<OutlinedInput className="ListTitle" value={listData?.title} />
+				<OutlinedInput
+					className="ListTitle"
+					value={listData?.title}
+					onChange={onTitleChangeHandler}
+					placeholder="Add a title"
+				/>
 				<ListComponent component="div" className="List">
 					{listItems.map((item: IListItem, i: number) => (
 						<ListItem
@@ -61,6 +97,7 @@ const List = (): ReactElement => {
 							text={item.text}
 							index={i}
 							moveCard={moveCard}
+							onRemove={onRemoveItem}
 						/>
 					))}
 					<NewItem onAdd={onAddNew} />

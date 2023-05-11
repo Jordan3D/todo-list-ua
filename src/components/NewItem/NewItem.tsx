@@ -43,14 +43,16 @@ const NewItem = ({ onAdd }: { onAdd: (value: string) => void }): ReactElement =>
 		setNewItemValue(e.target.value);
 	};
 
-	const onCancelHandler = () => {
+	const onCancelHandler = (e: React.MouseEvent<HTMLElement>) => {
+		e.stopPropagation();
 		setNewItemValue('');
 		setAddNew(false);
 	};
 
-	const onAddHandler = () => {
+	const onAddHandler = (e: React.MouseEvent<HTMLElement>) => {
+		e.stopPropagation();
 		onAdd(newItemValue);
-		onCancelHandler();
+		onCancelHandler(e);
 	};
 
 	useOutsideAlerter(wrapperRef, onAddDisable);
@@ -61,12 +63,14 @@ const NewItem = ({ onAdd }: { onAdd: (value: string) => void }): ReactElement =>
 				<div className="NewItem__form">
 					<OutlinedInput value={newItemValue} onChange={onNewInputChange} />
 					<div className="NewItem__side">
-						<Button onClick={onAddHandler}>Add</Button>
+						<Button onClick={onAddHandler} disabled={!newItemValue.length}>
+							Add
+						</Button>
 						<Button onClick={onCancelHandler}>Cancel</Button>
 					</div>
 				</div>
 			) : (
-				'Add new'
+				'Add new todo item'
 			)}
 		</ListItemButton>
 	);

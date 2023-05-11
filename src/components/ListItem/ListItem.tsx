@@ -1,15 +1,18 @@
-import { ReactElement, useRef } from 'react';
+import { ReactElement, useEffect, useRef, useState, ChangeEvent } from 'react';
 import type { Identifier, XYCoord } from 'dnd-core';
-import { ListItemButton, Typography } from '@mui/material';
+import { ListItemButton, Typography, Button, Popover, OutlinedInput } from '@mui/material';
 import { useDrag, useDrop } from 'react-dnd';
 import './ListItem.css';
+import { IListItem } from '../../types';
 
 interface Props {
 	text: string;
-	id: string | number;
+	id: number;
 	index: number;
 	className?: string;
 	moveCard?: (dragIndex: number, hoverIndex: number) => void;
+	onRemove?: (id: number) => void;
+	onEdit?: (item: IListItem, index: number) => void;
 }
 
 interface DragItem {
@@ -26,8 +29,20 @@ const listClassGet = ({
 	className?: string;
 }) => `ListItem ${className} ${isDragging ? 'isDragging' : ''}`;
 
-const ListItem = ({ className, text, index, id, moveCard }: Props): ReactElement => {
+const ListItem = ({
+	className,
+	text,
+	index,
+	id,
+	moveCard,
+	onEdit,
+	onRemove,
+}: Props): ReactElement => {
 	const ref = useRef<HTMLDivElement>(null);
+	const sideRef = useRef<HTMLDivElement>(null);
+	const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+	const [isEdit, setIsEdit] = useState(false);
+	const [inputText, setInputText] = useState(text);
 
 	const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
 		accept: 'MenuItem',
@@ -98,15 +113,78 @@ const ListItem = ({ className, text, index, id, moveCard }: Props): ReactElement
 		}),
 	});
 
+	const onEditHandler = () => setIsEdit(true);
+
+	const onDeleteHandler = (e: React.MouseEvent<HTMLElement>) => {
+		e.stopPropagation();
+		setIsPopoverOpen(true);
+	};
+
+	// Remove popover handlers
+	const onClosePopover = () => setIsPopoverOpen(false);
+	const onSubmitRemoval = () => (onRemove ? onRemove(id) : undefined);
+
+	// Edit item handlers
+	const onEditInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setInputText(e.target.value);
+	};
+	const onFinishEditHandler = () => {
+		if (onEdit) {
+			onEdit({ id, text: inputText }, index);
+			setIsEdit(false);
+		}
+	};
+	const onCancelEditHandler = () => setIsEdit(false);
+
 	drag(drop(ref));
+
+	useEffect(() => setInputText(text), [text]);
+
+	const renderDefault = () => (
+		<>
+			<Typography>{text}</Typography>
+			<div className="ListItem__actions" ref={sideRef}>
+				{onEdit && <Button onClick={onEditHandler}>Edit</Button>}
+				{onRemove && <Button onClick={onDeleteHandler}>Delete</Button>}
+			</div>
+			<Popover
+				id={'delete-item-popover'}
+				open={isPopoverOpen}
+				anchorEl={sideRef?.current}
+				onClose={onClosePopover}
+				anchorOrigin={{
+					vertical: 'bottom',
+					horizontal: 'left',
+				}}
+			>
+				<Typography sx={{ p: 2 }}>Are you sure that you want to delete item ?</Typography>
+				<div className="ListItemPopover__actions">
+					<Button onClick={onSubmitRemoval}>Submit</Button>
+					<Button onClick={onClosePopover}>Cancel</Button>
+				</div>
+			</Popover>
+		</>
+	);
+
+	const renderEdit = () => (
+		<div className="EditItem__form">
+			<OutlinedInput value={inputText} onChange={onEditInputChange} />
+			<div className="EditItem__side">
+				<Button onClick={onFinishEditHandler} disabled={!inputText.length}>
+					Submit
+				</Button>
+				<Button onClick={onCancelEditHandler}>Cancel</Button>
+			</div>
+		</div>
+	);
 
 	return (
 		<ListItemButton
-			ref={ref}
+			ref={isEdit ? null : ref}
 			className={listClassGet({ isDragging, className })}
 			data-handler-id={handlerId}
 		>
-			<Typography>{text}</Typography>
+			{isEdit ? renderEdit() : renderDefault()}
 		</ListItemButton>
 	);
 };

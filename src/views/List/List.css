@@ -8,6 +8,10 @@
 .ListContainer__content {
 	margin-top: 2.5rem;
 }
+.ListContainer__header {
+	display: flex;
+	justify-content: space-between;
+}
 .ListContainer .ListTitle:active,
 .ListContainer .ListTitle:hover,
 .ListContainer .ListTitle:focus {
