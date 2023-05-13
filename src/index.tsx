@@ -29,12 +29,11 @@ serviceWorkerRegistration.unregister();
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
-// TODO 1. Redux store for lists
+// TODO 1. Redux store for lists +
 // TODO 2. Redux actions for CRUD List
-// TODO 3. Create list full cycle
+// TODO 3. Create list full cycle +
 // TODO 4. UI Search
 // TODO 5. Logic url filter
 // TODO 6. Modify redux store and actions for search
 // TODO 7. Style refactor
-// TODO 8. DB raw management
-// TODO 9. Download and upload data file
+// TODO 8. Download and upload data file

@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useRef, useState, ChangeEvent } from 'react';
+import React, { ReactElement, useEffect, useRef, useState, ChangeEvent } from 'react';
 import type { Identifier, XYCoord } from 'dnd-core';
 import { ListItemButton, Typography, Button, Popover, OutlinedInput } from '@mui/material';
 import { useDrag, useDrop } from 'react-dnd';
@@ -10,7 +10,7 @@ interface Props {
 	id: number;
 	index: number;
 	className?: string;
-	moveCard?: (dragIndex: number, hoverIndex: number) => void;
+	move?: (dragIndex: number, hoverIndex: number) => void;
 	onRemove?: (id: number) => void;
 	onEdit?: (item: IListItem, index: number) => void;
 }
@@ -29,15 +29,7 @@ const listClassGet = ({
 	className?: string;
 }) => `ListItem ${className} ${isDragging ? 'isDragging' : ''}`;
 
-const ListItem = ({
-	className,
-	text,
-	index,
-	id,
-	moveCard,
-	onEdit,
-	onRemove,
-}: Props): ReactElement => {
+const ListItem = ({ className, text, index, id, move, onEdit, onRemove }: Props): ReactElement => {
 	const ref = useRef<HTMLDivElement>(null);
 	const sideRef = useRef<HTMLDivElement>(null);
 	const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -90,8 +82,8 @@ const ListItem = ({
 			}
 
 			// Time to actually perform the action
-			if (moveCard) {
-				moveCard(dragIndex, hoverIndex);
+			if (move) {
+				move(dragIndex, hoverIndex);
 			}
 
 			// Note: we're mutating the monitor item here!
@@ -136,6 +128,18 @@ const ListItem = ({
 	};
 	const onCancelEditHandler = () => setIsEdit(false);
 
+	const onInputKeyHandler = (e: React.KeyboardEvent) => {
+		const { key } = e;
+		console.log(key);
+		if (key === 'Enter') {
+			if (inputText.length) {
+				onFinishEditHandler();
+			}
+		} else if (key === 'Escape') {
+			onCancelEditHandler();
+		}
+	};
+
 	drag(drop(ref));
 
 	useEffect(() => setInputText(text), [text]);
@@ -167,8 +171,8 @@ const ListItem = ({
 	);
 
 	const renderEdit = () => (
-		<div className="EditItem__form">
-			<OutlinedInput value={inputText} onChange={onEditInputChange} />
+		<div className="EditItem__form" onKeyDown={onInputKeyHandler}>
+			<OutlinedInput autoFocus value={inputText} onChange={onEditInputChange} />
 			<div className="EditItem__side">
 				<Button onClick={onFinishEditHandler} disabled={!inputText.length}>
 					Submit

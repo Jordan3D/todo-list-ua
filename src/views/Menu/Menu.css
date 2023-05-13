@@ -14,9 +14,11 @@
 }
 .Menu .MenuItem * {
 	font-size: 1.5rem;
-}
-.Menu .MenuItem:hover * {
-	text-decoration: underline;
+	display: flex;
+	flex-grow: 1;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
 }
 
 @media screen and (max-width: 1000px) {
