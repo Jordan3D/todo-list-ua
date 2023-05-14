@@ -1,27 +1,13 @@
-import { ReactElement, useState } from 'react';
-import { List, ListItemButton, OutlinedInput, Button, Typography } from '@mui/material';
-import { useSearchParams, useLocation } from 'react-router-dom';
-import './Search.css';
+import { ReactElement, useEffect, useState } from 'react';
+import { OutlinedInput, Button, Typography } from '@mui/material';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { useSearchParams } from 'react-router-dom';
 import TodoList from '../../components/TodoList/TodoList';
+import { useGetSearchParams } from '../../utils/hooks';
+import Filters from './components/Filters/Filters';
 
-interface ISearchQuery {
-	id?: string;
-	title?: string;
-	autosearch?: string;
-}
-
-const useGetSearchParams = () => {
-	const useQuery = () => new URLSearchParams(useLocation().search);
-	const query = useQuery();
-	const map = {} as ISearchQuery;
-
-	for (const [key, value] of query.entries() as IterableIterator<[keyof ISearchQuery, string]>) {
-		// eslint-disable-next-line
-		map[key] = value;
-	}
-
-	return map;
-};
+import './Search.css';
 
 const Search = (): ReactElement => {
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -41,6 +27,17 @@ const Search = (): ReactElement => {
 		setShowAll((value) => !value);
 	};
 
+	useEffect(() => {
+		// Put default filters in url
+		if (!searchParams.get('sort')) {
+			searchParams.set('sort', 'title');
+		}
+		if (!searchParams.get('order')) {
+			searchParams.set('order', 'ASC');
+		}
+		setSearchParams(searchParams);
+	}, []);
+
 	return (
 		<div className="SearchContainer">
 			<div className="SearchSection">
@@ -49,15 +46,18 @@ const Search = (): ReactElement => {
 						<div className="SearchHeaderGroup">
 							<OutlinedInput className="SearchByTitle" defaultValue={title}></OutlinedInput>
 							<Button className="SearchButton" onClick={onShowAllFilters}>
-								{showAll ? <Typography>Hide</Typography> : <Typography>Show</Typography>}
+								{showAll ? <RemoveIcon /> : <MoreHorizIcon />}
 							</Button>
 						</div>
 						<div className="SearchByOther"></div>
-						<Button className="SearchButton" onClick={onSubmit}>
+						<Button className="SearchButton SearchButton__Search" onClick={onSubmit}>
 							<Typography>Search</Typography>
 						</Button>
 					</div>
-					{showAll && <div className="SearchHeader__restFilters"></div>}
+					{showAll && <Filters className="SearchHeader__restFilters" />}
+					<Button className="SearchButton SearchButton--responsive" onClick={onSubmit}>
+						<Typography>Search</Typography>
+					</Button>
 				</div>
 				<div className="SearchResult"></div>
 			</div>

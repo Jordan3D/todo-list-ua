@@ -1,7 +1,7 @@
-import { ReactElement, useEffect, useState, useCallback, ChangeEvent } from 'react';
+import { ReactElement, useEffect, useState, useCallback, ChangeEvent, memo } from 'react';
 import update from 'immutability-helper';
 import { List, OutlinedInput, Button, Typography } from '@mui/material';
-import { useParams, useNavigate, useBeforeUnload } from 'react-router-dom';
+import { useNavigate, useBeforeUnload } from 'react-router-dom';
 import { IListEntity, IListItem } from '../../types';
 import ListItem from '../ListItem/ListItem';
 import NewItem from '../NewItem/NewItem';
@@ -18,8 +18,6 @@ const TodoList = ({
 	const [state, setState] = useState<Omit<IListEntity, 'id' | 'createDate'> | null>(null);
 	const [listData, setListData] = useState<{ title?: string; id?: number } | null>(null);
 	const [listItems, setListItems] = useState<IListItem[]>([]);
-
-	const navigate = useNavigate();
 
 	const onAddNew = (text: string) => {
 		setListItems((items) => [...items, { id: items.length, text }]);
@@ -162,4 +160,4 @@ const TodoList = ({
 	);
 };
 
-export default TodoList;
+export default memo(TodoList);

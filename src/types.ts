@@ -20,6 +20,14 @@ export interface IFilter {
 	lastId?: number;
 }
 
+export interface ISearchQuery {
+	id?: string;
+	title?: string;
+	autosearch?: string;
+	sort: string;
+	order: string;
+}
+
 export interface IFetchData {
 	getTodo(id: string): Promise<IListEntity | null>;
 	getLists(filters: IFilter): Promise<ReadonlyArray<IListEntity>>;
