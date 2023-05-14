@@ -130,7 +130,6 @@ const ListItem = ({ className, text, index, id, move, onEdit, onRemove }: Props)
 
 	const onInputKeyHandler = (e: React.KeyboardEvent) => {
 		const { key } = e;
-		console.log(key);
 		if (key === 'Enter') {
 			if (inputText.length) {
 				onFinishEditHandler();

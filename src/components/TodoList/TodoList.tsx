@@ -1,15 +1,20 @@
 import { ReactElement, useEffect, useState, useCallback, ChangeEvent } from 'react';
 import update from 'immutability-helper';
-import { List as ListComponent, OutlinedInput, Button, Typography } from '@mui/material';
+import { List, OutlinedInput, Button, Typography } from '@mui/material';
 import { useParams, useNavigate, useBeforeUnload } from 'react-router-dom';
 import { IListEntity, IListItem } from '../../types';
-import ListItem from '../../components/ListItem/ListItem';
-import NewItem from '../../components/NewItem/NewItem';
+import ListItem from '../ListItem/ListItem';
+import NewItem from '../NewItem/NewItem';
 import FetchData from '../../utils/storage';
-import './List.css';
+import './TodoList.css';
 
-const List = (): ReactElement => {
-	const { listId } = useParams();
+const TodoList = ({
+	id: listId,
+	onClose,
+}: {
+	id: string | 'new';
+	onClose: () => void;
+}): ReactElement => {
 	const [state, setState] = useState<Omit<IListEntity, 'id' | 'createDate'> | null>(null);
 	const [listData, setListData] = useState<{ title?: string; id?: number } | null>(null);
 	const [listItems, setListItems] = useState<IListItem[]>([]);
@@ -68,7 +73,7 @@ const List = (): ReactElement => {
 				return undefined;
 			}
 		}
-		navigate('/menu');
+		onClose();
 	};
 
 	const onEditItem = (item: IListItem, index: number) => {
@@ -121,26 +126,26 @@ const List = (): ReactElement => {
 	const isSubmitDisabled = !(listData?.title && listItems.length);
 
 	return (
-		<div className="ListContainer">
-			<div className="ListContainer__header">
+		<div className="TodoListContainer">
+			<div className="TodoListContainer__header">
 				<Button onClick={BackHandler}>
-					<Typography>Back</Typography>
+					<Typography>Close</Typography>
 				</Button>
 				<Button variant="outlined" onClick={SubmitHandler} disabled={isSubmitDisabled}>
 					<Typography>Submit</Typography>
 				</Button>
 			</div>
-			<div className="ListContainer__content">
+			<div className="TodoListContainer__content">
 				<OutlinedInput
-					className="ListTitle"
+					className="TodoListTitle"
 					value={listData?.title}
 					onChange={onTitleChangeHandler}
 					placeholder="Add a title"
 				/>
-				<ListComponent component="div" className="List">
+				<List component="div" className="TodoList">
 					{listItems.map((item: IListItem, i: number) => (
 						<ListItem
-							className={'ListItem'}
+							className={'TodoListItem'}
 							key={item.id}
 							id={item.id}
 							text={item.text}
@@ -151,10 +156,10 @@ const List = (): ReactElement => {
 						/>
 					))}
 					<NewItem onAdd={onAddNew} />
-				</ListComponent>
+				</List>
 			</div>
 		</div>
 	);
 };
 
-export default List;
+export default TodoList;
