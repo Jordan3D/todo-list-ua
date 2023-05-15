@@ -31,3 +31,15 @@
 	gap: 1.25rem;
 	margin-top: 1.25rem;
 }
+
+@media screen and (max-width: 1000px) {
+	.TodoListContainer {
+		padding: 1.5rem;
+	}
+}
+
+@media screen and (max-width: 576px) {
+	.TodoListContainer {
+		padding: 1rem;
+	}
+}

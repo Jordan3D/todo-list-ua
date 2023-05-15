@@ -1,3 +1,4 @@
+import { nanoid } from '@reduxjs/toolkit';
 import { IFetchData, IFilter, IListEntity, IListItem } from '../types';
 
 const getTodo = (id: string) => {
@@ -7,12 +8,18 @@ const getTodo = (id: string) => {
 	return Promise.resolve(result);
 };
 
-const getLists = async (filters: IFilter) => {
+const getLists = async ({ count, filters, lastId }: IFilter) => {
 	const data = JSON.parse(localStorage.getItem('todosData') || '{}') as Record<string, IListEntity>;
-	const result = Object.keys(data)
+	let result = Object.keys(data)
 		.map((id) => data[id])
 		// @ts-ignore
 		.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+	const lastIdIndex = result.findIndex((item) => item.id === lastId);
+	if (lastIdIndex === -1) {
+		result = result.slice(0, count);
+	} else {
+		result = result.slice(lastIdIndex, lastIdIndex + count);
+	}
 
 	return Promise.resolve(result);
 };
@@ -20,10 +27,14 @@ const getLists = async (filters: IFilter) => {
 const createTodo = async (title: string, todos: ReadonlyArray<IListItem>) => {
 	const data = JSON.parse(localStorage.getItem('todosData') || '{}') as Record<string, IListEntity>;
 	const result = {
-		id: Object.keys(data).length,
-		createDate: new Date(),
+		id: nanoid(),
+		createDate: new Date().toISOString(),
 		title,
-		todos,
+		todos: todos.map((item) => {
+			// Replacing temporary id
+			item.id = nanoid();
+			return item;
+		}),
 	} as IListEntity;
 	data[result.id] = result;
 	localStorage.setItem('todosData', JSON.stringify(data));

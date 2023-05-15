@@ -7,11 +7,11 @@ import { IListItem } from '../../types';
 
 interface Props {
 	text: string;
-	id: number;
+	id: string;
 	index: number;
 	className?: string;
 	move?: (dragIndex: number, hoverIndex: number) => void;
-	onRemove?: (id: number) => void;
+	onRemove?: (id: string) => void;
 	onEdit?: (item: IListItem, index: number) => void;
 }
 

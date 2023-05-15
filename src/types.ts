@@ -1,23 +1,22 @@
 export interface IList {
 	title: string;
-	id: number;
+	id: string;
 }
 
 export interface IListItem {
 	text: string;
-	id: number;
+	id: string;
 }
 
 export interface IListEntity extends IList {
 	todos: ReadonlyArray<IListItem>;
-	createDate: Date;
+	createDate: string;
 }
 
 export interface IFilter {
-	count?: number;
+	count: number;
 	filters?: Record<string, string>;
-	sortBy?: [string, 'DESC' | 'ASC'];
-	lastId?: number;
+	lastId?: string;
 }
 
 export interface ISearchQuery {

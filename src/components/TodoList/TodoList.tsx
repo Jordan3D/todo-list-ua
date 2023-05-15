@@ -1,7 +1,7 @@
 import { ReactElement, useEffect, useState, useCallback, ChangeEvent, memo } from 'react';
 import update from 'immutability-helper';
 import { List, OutlinedInput, Button, Typography } from '@mui/material';
-import { useNavigate, useBeforeUnload } from 'react-router-dom';
+import { useBeforeUnload } from 'react-router-dom';
 import { IListEntity, IListItem } from '../../types';
 import ListItem from '../ListItem/ListItem';
 import NewItem from '../NewItem/NewItem';
@@ -16,11 +16,11 @@ const TodoList = ({
 	onClose: () => void;
 }): ReactElement => {
 	const [state, setState] = useState<Omit<IListEntity, 'id' | 'createDate'> | null>(null);
-	const [listData, setListData] = useState<{ title?: string; id?: number } | null>(null);
+	const [listData, setListData] = useState<{ title?: string; id?: string } | null>(null);
 	const [listItems, setListItems] = useState<IListItem[]>([]);
 
 	const onAddNew = (text: string) => {
-		setListItems((items) => [...items, { id: items.length, text }]);
+		setListItems((items) => [...items, { id: String(items.length), text }]);
 	};
 
 	const onTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +65,10 @@ const TodoList = ({
 	}, []);
 
 	const BackHandler = () => {
-		if (JSON.stringify(state) !== JSON.stringify({ title: listData?.title, todos: listItems })) {
+		if (
+			state &&
+			JSON.stringify(state) !== JSON.stringify({ title: listData?.title, todos: listItems })
+		) {
 			const confirmed = confirm('All changes will be discarded');
 			if (!confirmed) {
 				return undefined;
@@ -86,7 +89,7 @@ const TodoList = ({
 		console.log('Edit Item');
 	};
 
-	const onRemoveItem = (id: number) => {
+	const onRemoveItem = (id: string) => {
 		setListItems((data) => {
 			const index = data.findIndex((item) => item.id === id);
 			if (index >= 0) {
