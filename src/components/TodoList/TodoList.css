@@ -1,5 +1,7 @@
 .TodoListContainer {
 	padding: 2.5rem;
+	min-height: 100%;
+	background-color: azure;
 }
 .TodoListContainer .TodoListTitle {
 	font-size: 1.125rem;
@@ -11,6 +13,13 @@
 .TodoListContainer__header {
 	display: flex;
 	justify-content: space-between;
+}
+.TodoListContainer__headerSide {
+	display: flex;
+	gap: 1rem;
+}
+.TodoListContainer__header .Icon {
+	display: none;
 }
 .TodoListContainer .TodoListTitle:active,
 .TodoListContainer .TodoListTitle:hover,
@@ -32,6 +41,20 @@
 	margin-top: 1.25rem;
 }
 
+.TodoList .TodoListItem {
+	background-color: aliceblue;
+	border: 1px solid #c7d0ff94;
+	border-radius: 0.5rem;
+	box-shadow: 5px 4px 20px 0px rgb(105 148 242 / 20%);
+}
+
+.RemovalDialog {
+	padding: 1rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
 @media screen and (max-width: 1000px) {
 	.TodoListContainer {
 		padding: 1.5rem;
@@ -39,6 +62,12 @@
 }
 
 @media screen and (max-width: 576px) {
+	.TodoListContainer__header .Icon {
+		display: flex;
+	}
+	.TodoListContainer__header .Text {
+		display: none;
+	}
 	.TodoListContainer {
 		padding: 1rem;
 	}

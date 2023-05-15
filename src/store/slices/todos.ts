@@ -19,10 +19,15 @@ export const fetchAllTodosByFilter = createAsyncThunk(
 	'todos/fetchAllTodosByFilter',
 	async (filters: IFilter, thunkAPI) => {
 		const { todos } = thunkAPI.getState() as RootState;
-		filters.lastId = todos.list[todos.list.length - 1];
+		// filters.lastId = todos.list[todos.list.length - 1];
 		const response = await FetchData.getLists(filters);
 		return response;
 	}
+);
+
+export const removeTodoById = createAsyncThunk(
+	'todos/removeTodoById',
+	async (id: string, thunkAPI) => FetchData.removeTodo(id)
 );
 
 export const todosSlice = createSlice({

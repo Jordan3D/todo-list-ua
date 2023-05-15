@@ -3,7 +3,7 @@ import { IFetchData, IFilter, IListEntity, IListItem } from '../types';
 
 const getTodo = (id: string) => {
 	const data = JSON.parse(localStorage.getItem('todosData') || '{}') as Record<string, IListEntity>;
-	const result = data[id];
+	const result = data[id] || null;
 
 	return Promise.resolve(result);
 };

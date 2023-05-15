@@ -1,5 +1,5 @@
-import { ReactElement, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { ReactElement, useEffect, useState, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { OutlinedInput, Button, Typography, List, ListItemButton } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -8,21 +8,30 @@ import TodoList from '../../components/TodoList/TodoList';
 import { useGetSearchParams } from '../../utils/hooks';
 import Filters from './components/Filters/Filters';
 import { fetchAllTodosByFilter } from '../../store/slices/todos';
+import { selectTodos } from '../../store/selectors/todosSelectors';
 import './Search.css';
 
 const Search = (): ReactElement => {
 	const dispatch = useDispatch();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const { id, title } = useGetSearchParams();
+	const list = useSelector(selectTodos);
+
 	const [showAll, setShowAll] = useState(false);
 
-	const onClose = () => {
-		searchParams.set('id', '');
-		setSearchParams(searchParams);
-	};
+	const onAction = useCallback(
+		(action: 'add' | 'ed' | 'close', value = '') => {
+			if (action === 'add' || action === 'close') {
+				searchParams.set('id', value);
+			}
+			setSearchParams(searchParams);
+		},
+		[searchParams]
+	);
 
 	const onSubmit = () => {
 		// TODO Get all filters in Inputs, set them to url
+		console.log(localStorage.getItem('todosData'));
 	};
 
 	const onShowAllFilters = () => {
@@ -31,6 +40,11 @@ const Search = (): ReactElement => {
 
 	const onAddNew = () => {
 		searchParams.set('id', 'new');
+		setSearchParams(searchParams);
+	};
+
+	const onItemClick = (itemId: string) => {
+		searchParams.set('id', itemId);
 		setSearchParams(searchParams);
 	};
 
@@ -71,14 +85,24 @@ const Search = (): ReactElement => {
 						<Typography>Search</Typography>
 					</Button>
 				</div>
-				<List component="div" className="SearchResult"></List>
+				<List component="div" className="SearchResult">
+					{list.map((listItem) => (
+						<ListItemButton
+							key={listItem.id}
+							className="SearchResult__item"
+							onClick={() => onItemClick(listItem.id)}
+						>
+							<Typography variant="subtitle1">{listItem.title}</Typography>
+						</ListItemButton>
+					))}
+				</List>
 				<Button className="SearchButton SearchButton__AddNew" onClick={onAddNew}>
 					<Typography>Add new</Typography>
 				</Button>
 			</div>
 			{id && (
 				<div className="SearchSection TodoListSection">
-					<TodoList id={id} onClose={onClose} />
+					<TodoList id={id} onAction={onAction} />
 				</div>
 			)}
 		</div>

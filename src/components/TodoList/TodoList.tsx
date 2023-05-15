@@ -1,6 +1,17 @@
 import { ReactElement, useEffect, useState, useCallback, ChangeEvent, memo } from 'react';
 import update from 'immutability-helper';
-import { List, OutlinedInput, Button, Typography } from '@mui/material';
+import {
+	List,
+	OutlinedInput,
+	Button,
+	Typography,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogActions,
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CheckIcon from '@mui/icons-material/Check';
 import { useBeforeUnload } from 'react-router-dom';
 import { IListEntity, IListItem } from '../../types';
 import ListItem from '../ListItem/ListItem';
@@ -10,12 +21,13 @@ import './TodoList.css';
 
 const TodoList = ({
 	id: listId,
-	onClose,
+	onAction,
 }: {
 	id: string | 'new';
-	onClose: () => void;
+	onAction: (action: 'add' | 'ed' | 'close', value?: string) => void;
 }): ReactElement => {
 	const [state, setState] = useState<Omit<IListEntity, 'id' | 'createDate'> | null>(null);
+	const [openDialog, setOpenDialog] = useState(false);
 	const [listData, setListData] = useState<{ title?: string; id?: string } | null>(null);
 	const [listItems, setListItems] = useState<IListItem[]>([]);
 
@@ -32,6 +44,9 @@ const TodoList = ({
 			if (listId !== 'new') {
 				FetchData.getTodo(listId)
 					.then((res) => {
+						if (res === null) {
+							onAction('close');
+						}
 						setState(res ? { title: res.title, todos: res.todos } : null);
 						setListData({ title: res?.title, id: res?.id });
 						setListItems(res ? res.todos.slice() : []);
@@ -74,7 +89,7 @@ const TodoList = ({
 				return undefined;
 			}
 		}
-		onClose();
+		onAction('close');
 	};
 
 	const onEditItem = (item: IListItem, index: number) => {
@@ -107,7 +122,6 @@ const TodoList = ({
 					.then((res) => {
 						setState(res ? { title: res.title, todos: res.todos } : null);
 						setListData((data) => ({ ...data, id: res?.id }));
-						alert('todo edited');
 					})
 					.catch((e) => console.error(e));
 			} else {
@@ -115,7 +129,9 @@ const TodoList = ({
 					.then((res) => {
 						setState(res ? { title: res.title, todos: res.todos } : null);
 						setListData((data) => ({ ...data, id: res?.id }));
-						alert('todo created');
+						if (res) {
+							onAction('add', res.id);
+						}
 					})
 					.catch((e) => console.error(e));
 			}
@@ -124,7 +140,16 @@ const TodoList = ({
 		}
 	};
 
+	const DeleteHandler = () => {};
+
 	const isSubmitDisabled = !(listData?.title && listItems.length);
+
+	const handleClose = () => {
+		setOpenDialog(false);
+	};
+	const handleOpenDialog = () => {
+		setOpenDialog(true);
+	};
 
 	return (
 		<div className="TodoListContainer">
@@ -132,9 +157,18 @@ const TodoList = ({
 				<Button onClick={BackHandler}>
 					<Typography>Close</Typography>
 				</Button>
-				<Button variant="outlined" onClick={SubmitHandler} disabled={isSubmitDisabled}>
-					<Typography>Submit</Typography>
-				</Button>
+				<div className="TodoListContainer__headerSide">
+					{listId !== 'new' && (
+						<Button variant="outlined" onClick={handleOpenDialog}>
+							<DeleteIcon className="Icon" />
+							<Typography className="Text">Delete</Typography>
+						</Button>
+					)}
+					<Button variant="outlined" onClick={SubmitHandler} disabled={isSubmitDisabled}>
+						<CheckIcon className="Icon" />
+						<Typography className="Text">Submit</Typography>
+					</Button>
+				</div>
 			</div>
 			<div className="TodoListContainer__content">
 				<OutlinedInput
@@ -159,6 +193,20 @@ const TodoList = ({
 					<NewItem onAdd={onAddNew} />
 				</List>
 			</div>
+			<Dialog onClose={handleClose} open={openDialog}>
+				<DialogTitle>{`"${listData?.title || ''}" list removal`}</DialogTitle>
+				<DialogContent className="RemovalDialog">
+					<Typography>Are you sure to delete this list?</Typography>
+					<DialogActions>
+						<Button variant="outlined" onClick={DeleteHandler}>
+							Yes
+						</Button>
+						<Button variant="outlined" onClick={handleClose}>
+							No
+						</Button>
+					</DialogActions>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 };
