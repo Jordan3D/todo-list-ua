@@ -30,7 +30,7 @@ serviceWorkerRegistration.unregister();
 reportWebVitals();
 
 // TODO 1. Redux store for lists +
-// TODO 2. Redux actions for CRUD List
+// TODO 2. Redux actions for CRUD List +
 // TODO 3. Create list full cycle +
 // TODO 4. UI Search
 // TODO 5. Logic url filter +

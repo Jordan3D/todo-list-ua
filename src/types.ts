@@ -15,13 +15,13 @@ export interface IListEntity extends IList {
 
 export interface IFilter {
 	count: number;
-	filters?: Record<string, string>;
+	filters?: Record<'search', string>;
 	lastId?: string;
 }
 
 export interface ISearchQuery {
 	id?: string;
-	title?: string;
+	search?: string;
 	autosearch?: string;
 	sort: string;
 	order: string;

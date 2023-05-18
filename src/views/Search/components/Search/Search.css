@@ -1,0 +1,29 @@
+.SearchHeader {
+	display: flex;
+	flex-direction: column;
+	background-color: #e5f8ff;
+}
+.SearchHeaderGroup {
+	display: flex;
+	flex-wrap: nowrap;
+}
+.SearchHeader__mainFilters {
+	display: flex;
+	padding: 1rem;
+	justify-content: space-between;
+}
+.SearchHeader__restFilters {
+	display: flex;
+	padding: 1rem;
+	gap: 0.5rem;
+	background: white;
+}
+
+@media screen and (max-width: 576px) {
+	.SearchViewContainer .SearchHeaderGroup {
+		flex-grow: 1;
+	}
+	.SearchViewContainer .SearchInput {
+		flex-grow: 1;
+	}
+}

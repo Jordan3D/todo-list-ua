@@ -12,6 +12,7 @@ const getLists = async ({ count, filters, lastId }: IFilter) => {
 	const data = JSON.parse(localStorage.getItem('todosData') || '{}') as Record<string, IListEntity>;
 	let result = Object.keys(data)
 		.map((id) => data[id])
+		.filter((item) => item.title.indexOf(filters?.search || '') >= 0)
 		// @ts-ignore
 		.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
 	const lastIdIndex = result.findIndex((item) => item.id === lastId);

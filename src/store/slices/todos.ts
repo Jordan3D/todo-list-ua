@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { IFilter, IList } from '../../types';
+import { IFilter, IList, IListEntity } from '../../types';
 import FetchData from '../../utils/storage';
 import { RootState } from '..';
 
@@ -17,10 +17,13 @@ const initialState: ITodosState = {
 // First, create the thunk
 export const fetchAllTodosByFilter = createAsyncThunk(
 	'todos/fetchAllTodosByFilter',
-	async (filters: IFilter, thunkAPI) => {
-		const { todos } = thunkAPI.getState() as RootState;
-		// filters.lastId = todos.list[todos.list.length - 1];
-		const response = await FetchData.getLists(filters);
+	async (_, { getState }) => {
+		const filters = (getState() as RootState).filters;
+		const response = await FetchData.getLists({
+			count: filters.count,
+			lastId: filters.lastId,
+			filters: filters.map,
+		});
 		return response;
 	}
 );

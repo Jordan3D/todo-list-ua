@@ -1,8 +1,8 @@
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { DndProvider } from 'react-dnd';
 import { Routes, Route } from 'react-router-dom';
+import SearchView from '../../views/Search/SearchView';
 import './App.css';
-import SearchView from '../../views/Search/Search';
 
 const options = {
 	enableMouseEvents: true,
