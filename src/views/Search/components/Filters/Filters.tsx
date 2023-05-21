@@ -2,6 +2,7 @@ import { ReactElement, memo } from 'react';
 import { FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
 import { useGetSearchParams } from '../../../../utils/hooks';
+import './Filters.css';
 
 const FILTERS = [
 	{ key: 'title', title: 'Title' },
@@ -40,7 +41,7 @@ const Filters = ({ className }: { className?: string }): ReactElement => {
 					))}
 				</Select>
 			</FormControl>
-			<FormControl className="FitlerForm">
+			<FormControl className="FilterForm">
 				<InputLabel id="sort-by-label">Order</InputLabel>
 				<Select
 					labelId="order-label"

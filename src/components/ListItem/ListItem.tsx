@@ -1,6 +1,10 @@
 import React, { ReactElement, useEffect, useRef, useState, ChangeEvent } from 'react';
 import type { Identifier, XYCoord } from 'dnd-core';
 import { ListItemButton, Typography, Button, Popover, OutlinedInput } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
 import { useDrag, useDrop } from 'react-dnd';
 import './ListItem.css';
 import { IListItem } from '../../types';
@@ -147,8 +151,16 @@ const ListItem = ({ className, text, index, id, move, onEdit, onRemove }: Props)
 		<>
 			<Typography>{text}</Typography>
 			<div className="ListItem__actions" ref={sideRef}>
-				{onEdit && <Button onClick={onEditHandler}>Edit</Button>}
-				{onRemove && <Button onClick={onDeleteHandler}>Delete</Button>}
+				{onEdit && (
+					<Button onClick={onEditHandler}>
+						<EditIcon />
+					</Button>
+				)}
+				{onRemove && (
+					<Button onClick={onDeleteHandler}>
+						<DeleteIcon />
+					</Button>
+				)}
 			</div>
 			<Popover
 				id={'delete-item-popover'}
@@ -162,8 +174,12 @@ const ListItem = ({ className, text, index, id, move, onEdit, onRemove }: Props)
 			>
 				<Typography sx={{ p: 2 }}>Are you sure that you want to delete item ?</Typography>
 				<div className="ListItemPopover__actions">
-					<Button onClick={onSubmitRemoval}>Submit</Button>
-					<Button onClick={onClosePopover}>Cancel</Button>
+					<Button onClick={onSubmitRemoval}>
+						<CheckIcon />
+					</Button>
+					<Button onClick={onClosePopover}>
+						<CloseIcon />
+					</Button>
 				</div>
 			</Popover>
 		</>
@@ -171,12 +187,19 @@ const ListItem = ({ className, text, index, id, move, onEdit, onRemove }: Props)
 
 	const renderEdit = () => (
 		<div className="EditItem__form" onKeyDown={onInputKeyHandler}>
-			<OutlinedInput autoFocus value={inputText} onChange={onEditInputChange} />
+			<OutlinedInput
+				className="EditItem"
+				autoFocus
+				value={inputText}
+				onChange={onEditInputChange}
+			/>
 			<div className="EditItem__side">
 				<Button onClick={onFinishEditHandler} disabled={!inputText.length}>
-					Submit
+					<CheckIcon />
 				</Button>
-				<Button onClick={onCancelEditHandler}>Cancel</Button>
+				<Button onClick={onCancelEditHandler}>
+					<CloseIcon />
+				</Button>
 			</div>
 		</div>
 	);

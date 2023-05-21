@@ -1,13 +1,31 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+		'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.MuiInput-root:before,
+.MuiInput-root:after {
+	display: none !important;
+}
+
+.MuiInput-root input {
+	background-color: white;
+	padding: 0.75rem 0.5rem;
+}
+
+body .MuiTypography-body1,
+body .MuiTypography-subtitle1 {
+	letter-spacing: 0px;
+	line-height: 1.25rem;
+}
+
+@media screen and (max-width: 576px) {
+	body .MuiTypography-body1,
+	body.MuiTypography-subtitle1 {
+		letter-spacing: 0px;
+		line-height: 1rem;
+	}
 }

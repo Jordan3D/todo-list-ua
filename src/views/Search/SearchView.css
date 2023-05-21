@@ -1,7 +1,7 @@
 .SearchViewContainer {
 	position: relative;
 	height: 100%;
-	background-color: #f0f4fe;
+	background-color: #ffffff;
 	display: flex;
 }
 .SearchViewSection {
@@ -17,7 +17,7 @@
 	display: none;
 }
 .SearchViewContainer .SearchViewResult {
-	background-color: #f5fff7;
+	background-color: #ffffff;
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
@@ -26,7 +26,7 @@
 }
 .SearchViewResult .SearchViewResult__item {
 	flex-grow: 0;
-	padding: 1rem;
+	padding: 0.75rem;
 	background-color: aliceblue;
 	border: 1px solid #c7d0ff94;
 	border-radius: 0.5rem;
@@ -39,6 +39,8 @@
 
 .SearchViewButton__AddNew {
 	min-height: 3.5rem;
+	position: sticky;
+	bottom: 0px;
 }
 
 @media screen and (max-width: 1000px) {
@@ -50,12 +52,12 @@
 }
 
 @media screen and (max-width: 576px) {
-	.SearchViewContainer .SearchViewButton__SearchView {
+	.SearchViewContainer .SearchViewButton__Search {
 		display: none;
 	}
 	.SearchViewContainer .SearchViewButton--responsive {
 		display: flex;
 		width: 100%;
-		min-height: 2.5rem;
+		min-height: 3rem;
 	}
 }

@@ -14,7 +14,6 @@ const initialState: ITodosState = {
 	map: {},
 };
 
-// First, create the thunk
 export const fetchAllTodosByFilter = createAsyncThunk(
 	'todos/fetchAllTodosByFilter',
 	async (_, { getState }) => {
@@ -26,11 +25,6 @@ export const fetchAllTodosByFilter = createAsyncThunk(
 		});
 		return response;
 	}
-);
-
-export const removeTodoById = createAsyncThunk(
-	'todos/removeTodoById',
-	async (id: string, thunkAPI) => FetchData.removeTodo(id)
 );
 
 export const todosSlice = createSlice({
@@ -48,11 +42,11 @@ export const todosSlice = createSlice({
 		edit: (state, action: PayloadAction<IList>) => {
 			state.map[action.payload.id] = action.payload;
 		},
-		remove: (state, action: PayloadAction<IList>) => {
-			const index = state.list.findIndex((id: string) => id === action.payload.id);
+		remove: (state, action: PayloadAction<string>) => {
+			const index = state.list.findIndex((id: string) => id === action.payload);
 			state.list = [...state.list.slice(0, index), ...state.list.slice(index + 1)];
 			const copy = { ...state.map };
-			delete copy[action.payload.id];
+			delete copy[action.payload];
 			state.map = copy;
 		},
 	},
@@ -69,5 +63,20 @@ export const todosSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const { add, edit, remove } = todosSlice.actions;
+
+export const removeTodoById = createAsyncThunk(
+	'todos/removeTodoById',
+	async (id: string, { dispatch }) => {
+		try {
+			if ((await FetchData.removeTodo(id)) !== true) {
+				throw Error();
+			}
+
+			dispatch(remove(id));
+		} catch (e) {
+			console.error(e);
+		}
+	}
+);
 
 export default todosSlice.reducer;

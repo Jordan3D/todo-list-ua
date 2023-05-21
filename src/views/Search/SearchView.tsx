@@ -16,9 +16,13 @@ const SearchView = (): ReactElement => {
 	const list = useSelector(selectTodos);
 
 	const onAction = useCallback(
-		(action: 'add' | 'ed' | 'close', value = '') => {
-			if (action === 'add' || action === 'close') {
+		(action: 'add' | 'ed' | 'close' | 'del', value = '') => {
+			if (action === 'add' || action === 'close' || action === 'del') {
 				searchParams.set('id', value);
+			}
+			if (action === 'add' || action === 'ed') {
+				// @ts-ignore
+				dispatch(fetchAllTodosByFilter());
 			}
 			setSearchParams(searchParams);
 		},

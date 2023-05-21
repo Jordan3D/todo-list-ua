@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useState, useCallback, ChangeEvent, memo } fro
 import update from 'immutability-helper';
 import {
 	List,
-	OutlinedInput,
+	Input,
 	Button,
 	Typography,
 	Dialog,
@@ -13,19 +13,22 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 import { useBeforeUnload } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { IListEntity, IListItem } from '../../types';
 import ListItem from '../ListItem/ListItem';
 import NewItem from '../NewItem/NewItem';
 import FetchData from '../../utils/storage';
 import './TodoList.css';
+import { removeTodoById } from '../../store/slices/todos';
 
 const TodoList = ({
 	id: listId,
 	onAction,
 }: {
 	id: string | 'new';
-	onAction: (action: 'add' | 'ed' | 'close', value?: string) => void;
+	onAction: (action: 'add' | 'ed' | 'close' | 'del', value?: string) => void;
 }): ReactElement => {
+	const dispatch = useDispatch();
 	const [state, setState] = useState<Omit<IListEntity, 'id' | 'createDate'> | null>(null);
 	const [openDialog, setOpenDialog] = useState(false);
 	const [listData, setListData] = useState<{ title?: string; id?: string } | null>(null);
@@ -52,6 +55,10 @@ const TodoList = ({
 						setListItems(res ? res.todos.slice() : []);
 					})
 					.catch((e) => console.error(e));
+			} else if (listId === 'new') {
+				setState(null);
+				setListData(null);
+				setListItems([]);
 			}
 		}
 	}, [listId]);
@@ -118,7 +125,7 @@ const TodoList = ({
 	const SubmitHandler = () => {
 		if (listData) {
 			if (listData.id !== undefined) {
-				FetchData.editTodo(String(listData.id), { title: listData.title, todos: listItems })
+				FetchData.editTodo(listId, { title: listData.title, todos: listItems })
 					.then((res) => {
 						setState(res ? { title: res.title, todos: res.todos } : null);
 						setListData((data) => ({ ...data, id: res?.id }));
@@ -140,7 +147,19 @@ const TodoList = ({
 		}
 	};
 
-	const DeleteHandler = () => {};
+	const DeleteHandler = () => {
+		/* eslint-disable */
+		//@ts-ignore
+		dispatch(removeTodoById(listId))
+			.unwrap()
+			.then(() => {
+				onAction('del');
+			})
+			.finally(() => {
+				setOpenDialog(false);
+			});
+		/* eslint-enable */
+	};
 
 	const isSubmitDisabled = !(listData?.title && listItems.length);
 
@@ -171,9 +190,9 @@ const TodoList = ({
 				</div>
 			</div>
 			<div className="TodoListContainer__content">
-				<OutlinedInput
+				<Input
 					className="TodoListTitle"
-					value={listData?.title}
+					value={listData?.title || ''}
 					onChange={onTitleChangeHandler}
 					placeholder="Add a title"
 				/>

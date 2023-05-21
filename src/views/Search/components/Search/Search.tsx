@@ -1,6 +1,6 @@
 import { ReactElement, memo, useState, useCallback, ChangeEvent } from 'react';
 import { useDispatch } from 'react-redux';
-import { Button, OutlinedInput, Typography } from '@mui/material';
+import { Button, Input, Typography } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useSearchParams } from 'react-router-dom';
@@ -46,11 +46,7 @@ const Search = (): ReactElement => {
 		<div className="SearchHeader">
 			<div className="SearchHeader__mainFilters">
 				<div className="SearchHeaderGroup">
-					<OutlinedInput
-						className="SearchInput"
-						onChange={onSearchInputChange}
-						value={searchValue}
-					></OutlinedInput>
+					<Input className="SearchInput" onChange={onSearchInputChange} value={searchValue}></Input>
 					<Button className="SearchViewButton" onClick={onShowAllFilters}>
 						{showAll ? <RemoveIcon /> : <MoreHorizIcon />}
 					</Button>

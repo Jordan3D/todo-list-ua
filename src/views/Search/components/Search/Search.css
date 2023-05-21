@@ -1,11 +1,14 @@
 .SearchHeader {
 	display: flex;
 	flex-direction: column;
-	background-color: #e5f8ff;
+	background-color: #e4ecff;
 }
 .SearchHeaderGroup {
 	display: flex;
 	flex-wrap: nowrap;
+	gap: 1rem;
+	max-width: 48rem;
+	width: 100%;
 }
 .SearchHeader__mainFilters {
 	display: flex;
@@ -17,6 +20,15 @@
 	padding: 1rem;
 	gap: 0.5rem;
 	background: white;
+}
+.SearchInput {
+	flex-grow: 1;
+}
+
+.SearchInput input {
+	background-color: white;
+	border: 2px solid cornflowerblue;
+	border-radius: 0.5rem;
 }
 
 @media screen and (max-width: 576px) {

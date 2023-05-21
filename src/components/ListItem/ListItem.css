@@ -1,12 +1,23 @@
 .ListItem.MuiButtonBase-root {
 	background-color: white;
 	border: 1px dotted transparent;
-	height: 3.125rem;
+	min-height: 3.125rem;
 	display: flex;
 	justify-content: space-between;
+	padding: 0.5rem 0.75rem;
 }
-.ListItem .ListItem__actions {
+.ListItem .EditItem__form .EditItem {
+	width: 100%;
+}
+.ListItem .ListItem__actions,
+.ListItem .EditItem__side {
 	display: flex;
+	gap: 0.5rem;
+}
+.ListItem .ListItem__actions button,
+.ListItem .EditItem__side button {
+	padding: 0.5rem;
+	min-width: auto;
 }
 .ListItemPopover__actions {
 	display: flex;
@@ -20,6 +31,7 @@
 	display: flex;
 	width: 100%;
 	justify-content: space-between;
+	gap: 1rem;
 }
 .ListItem .EditItem__form input {
 	padding: 0 0.75rem;
