@@ -28,6 +28,8 @@ export interface ISearchQuery {
 }
 
 export interface IFetchData {
+	getAll(): Promise<Record<string, IListEntity>>;
+	setData(data: Record<string, IListEntity>): Promise<boolean>;
 	getTodo(id: string): Promise<IListEntity | null>;
 	getLists(filters: IFilter): Promise<ReadonlyArray<IListEntity>>;
 	createTodo(title: string, todos: ReadonlyArray<IListItem>): Promise<IListEntity | null>;

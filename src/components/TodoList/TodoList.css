@@ -1,6 +1,6 @@
 .TodoListContainer {
 	padding: 1.5rem;
-	min-height: calc(100% - 3rem);
+	min-height: calc(100% - 2rem);
 	background-color: #e0efff;
 }
 .TodoListContainer .TodoListTitle {

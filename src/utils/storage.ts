@@ -1,6 +1,22 @@
 import { nanoid } from '@reduxjs/toolkit';
 import { IFetchData, IFilter, IListEntity, IListItem } from '../types';
 
+const getAll = () => {
+	const data = JSON.parse(localStorage.getItem('todosData') || '{}') as Record<string, IListEntity>;
+
+	return Promise.resolve(data);
+};
+
+const setData = (data: Record<string, IListEntity>) => {
+	try {
+		localStorage.setItem('todosData', JSON.stringify(data));
+	} catch (err) {
+		console.error('Something wrong with seting data');
+	}
+
+	return Promise.resolve(true);
+};
+
 const getTodo = (id: string) => {
 	const data = JSON.parse(localStorage.getItem('todosData') || '{}') as Record<string, IListEntity>;
 	const result = data[id] || null;
@@ -71,6 +87,8 @@ const removeTodo = async (id: string) => {
 };
 
 const FetchData: IFetchData = {
+	getAll,
+	setData,
 	getTodo,
 	getLists,
 	createTodo,

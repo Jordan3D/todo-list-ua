@@ -27,6 +27,16 @@ export const fetchAllTodosByFilter = createAsyncThunk(
 	}
 );
 
+/* eslint-disable */
+export const setAllData = createAsyncThunk(
+	'todos/setAllData',
+	(data: Record<string, IListEntity>) => FetchData.setData(data)
+);
+/* eslint-enable */
+
+/* eslint-disable-next-line */
+export const fetchAllData = createAsyncThunk('todos/fetchAllData', () => FetchData.getAll());
+
 export const todosSlice = createSlice({
 	name: 'todos',
 	initialState,

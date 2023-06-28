@@ -1,0 +1,10 @@
+.Settings {
+	display: flex;
+}
+.Settings .UploadFile {
+	position: relative;
+}
+.Settings .UploadFile .UploadInput {
+	visibility: hidden;
+	position: absolute;
+}
